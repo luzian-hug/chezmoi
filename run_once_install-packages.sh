@@ -58,6 +58,15 @@ install_arch() {
     fi
 }
 
+install_arch_fonts() {
+    sudo pacman -S --needed ttf-hack
+
+    # Nerd Font version (if not in repos, use AUR via yay)
+    if ! pacman -Qi ttf-hack-nerd >/dev/null 2>&1; then
+        yay -S --noconfirm ttf-hack-nerd
+    fi
+}
+
 install_fedora() {
     sudo dnf install -y \
         fish \
@@ -74,6 +83,10 @@ install_fedora() {
         npm \
         htop \
         wl-clipboard
+}
+
+install_fedora_fonts() {
+    sudo dnf install -y hack-fonts
 }
 
 install_debian() {
@@ -104,16 +117,45 @@ install_debian() {
     fi
 }
 
+install_debian_fonts() {
+    mkdir -p ~/.local/share/fonts
+
+    cd /tmp
+    curl -fLo Hack.zip \
+        https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
+
+    unzip -o Hack.zip -d ~/.local/share/fonts/
+
+    fc-cache -fv
+}
+
+change_shell_to_fish() {
+    if command -v fish >/dev/null 2>&1; then
+        if [ "$SHELL" != "$(command -v fish)" ]; then
+            echo "Changing default shell to fish..."
+            chsh -s "$(command -v fish)"
+        else
+            echo "Fish already default shell."
+        fi
+    else
+        echo "Fish not installed, skipping shell change."
+    fi
+}
+
 case "$DISTRO" in
     arch)
         install_arch
+        install_arch_fonts
         ;;
     fedora)
         install_fedora
+        install_fedora_fonts
         ;;
     debian)
         install_debian
-        ;;
-esac
+        install_debian_fonts
+        ;;esac
+
+change_shell_to_fish()
 
 echo "Done."
