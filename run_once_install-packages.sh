@@ -2,6 +2,20 @@
 
 set -euo pipefail
 
+echo "Bootstrap install script"
+
+read -r -p "Run installation? [y/N]: " answer
+
+case "$answer" in
+    y|Y|yes|YES)
+        echo "Starting installation..."
+        ;;
+    *)
+        echo "Skipping installation."
+        exit 0
+        ;;
+esac
+
 echo "Detecting distribution..."
 
 if command -v pacman >/dev/null 2>&1; then
