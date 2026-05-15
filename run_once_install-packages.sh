@@ -85,7 +85,6 @@ install_fedora() {
     sudo dnf install -y \
         fish \
         kitty \
-        starship \
         chezmoi \
         neovim \
         fzf \
@@ -97,10 +96,18 @@ install_fedora() {
         npm \
         htop \
         wl-clipboard
+
+    if ! command -v starship >/dev/null 2>&1; then
+        curl -sS https://starship.rs/install.sh | sh
+    fi
 }
 
 install_fedora_fonts() {
-    sudo dnf install -y hack-fonts
+    mkdir -p ~/.local/share/fonts
+    wget -P /tmp https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Hack.zip \
+        && unzip /tmp/Hack.zip -d ~/.local/share/fonts \
+        && rm /tmp/Hack.zip
+    fc-cache -fv
 }
 
 install_debian() {
@@ -170,6 +177,6 @@ case "$DISTRO" in
         install_debian_fonts
         ;;esac
 
-change_shell_to_fish()
+change_shell_to_fish
 
 echo "Done."
