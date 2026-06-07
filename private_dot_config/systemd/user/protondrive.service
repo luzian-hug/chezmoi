@@ -1,0 +1,16 @@
+[Unit]
+Description=Rclone Proton Drive Mount
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/rclone mount proton-drive: %h/proton-drive \
+    --vfs-cache-mode writes \
+    --dir-cache-time 1m \
+    --poll-interval 1m
+
+ExecStop=/bin/fusermount -u %h/ProtonDrive
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
