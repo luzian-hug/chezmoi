@@ -45,6 +45,7 @@ COMMON_PACKAGES=(
     nodejs
     npm
     htop
+    eza
 )
 
 ARCH_ONLY=(
@@ -95,7 +96,8 @@ install_fedora() {
         nodejs \
         npm \
         htop \
-        wl-clipboard
+        wl-clipboard \
+        eza
 
     if ! command -v starship >/dev/null 2>&1; then
         curl -sS https://starship.rs/install.sh | sh
@@ -127,7 +129,8 @@ install_debian() {
         htop \
         wl-clipboard \
         curl \
-        git
+        git \
+        eza
 
     if ! command -v starship >/dev/null 2>&1; then
         curl -sS https://starship.rs/install.sh | sh
@@ -148,6 +151,10 @@ install_debian_fonts() {
     unzip -o Hack.zip -d ~/.local/share/fonts/
 
     fc-cache -fv
+}
+
+install_rclone() {
+    sudo -v ; curl https://rclone.org/install.sh | sudo bash    
 }
 
 change_shell_to_fish() {
@@ -176,6 +183,8 @@ case "$DISTRO" in
         install_debian
         install_debian_fonts
         ;;esac
+
+install_rclone
 
 change_shell_to_fish
 
